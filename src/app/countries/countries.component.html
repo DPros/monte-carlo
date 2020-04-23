@@ -1,0 +1,9 @@
+<div style="">
+  <select (change)="onSelect($event.target.value)">
+    <option *ngFor="let c of countries; let i = index" [value]="i">{{c.properties.ADMIN}}</option>
+  </select>
+  {{countryArea}} sq.km.
+</div>
+<div>
+  <canvas [width]="size" [height]="size" #canvas></canvas>
+</div>
