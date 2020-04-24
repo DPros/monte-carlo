@@ -11,21 +11,22 @@ export class FunctionComponent implements OnInit {
   form = new FormGroup({
     from: new FormControl(null, Validators.required),
     to: new FormControl(null, Validators.required),
-    where: new FormControl(null, Validators.required)
+    where: new FormControl("bottom", Validators.required),
+    limit: new FormControl(null, Validators.required)
   })
 
   res = 0;
 
   func(x) {
-    return Math.cos(x)
+    return Math.log(x)
   }
 
   ngOnInit(): void {
-    this.form.valueChanges.subscribe(({from, to, where}) => {
+    this.form.valueChanges.subscribe(({from, to, where, limit}) => {
       if (this.form.valid) {
         let max = Number.NEGATIVE_INFINITY;
         let min = Number.POSITIVE_INFINITY;
-        for (let i = from; i <= to; i += 0.1) {
+        for (let i = from; i < to + 0.1; i += 0.1) {
           const y = this.func(i);
           console.log(i + " " + y);
           if (y > max) {
@@ -34,6 +35,12 @@ export class FunctionComponent implements OnInit {
             min = y;
           }
         }
+        if (max === Number.NEGATIVE_INFINITY) {
+          max = limit
+        }
+        if (min === Number.POSITIVE_INFINITY) {
+          min = limit
+        }
         let xShift, yShift, width, height;
         if (from < 0) {
           xShift = -from;
@@ -41,7 +48,7 @@ export class FunctionComponent implements OnInit {
           to += xShift;
           width = to;
         } else {
-          xShift = 0;
+          xShift = -from;
           width = to - from;
         }
         if (min < 0) {
@@ -50,7 +57,7 @@ export class FunctionComponent implements OnInit {
           max += yShift;
           height = max;
         } else {
-          yShift = 0;
+          yShift = -min;
           height = max - min
         }
 
@@ -60,7 +67,7 @@ export class FunctionComponent implements OnInit {
           const x = Math.random() * width - xShift;
           const y = Math.random() * height - yShift;
           const calcY = this.func(x);
-          if (where === "above") {
+          if (where === "top") {
             if (y > calcY) {
               ++ins
             }
@@ -68,7 +75,14 @@ export class FunctionComponent implements OnInit {
             ++ins
           }
         }
+
         this.res = ins / 1000 * width * height
+
+        if (where === "top") {
+          this.res += (limit - (max - yShift)) * width * (max - yShift)
+        } else {
+          this.res += (min - yShift - limit) * width * (min - yShift)
+        }
       }
     })
   }

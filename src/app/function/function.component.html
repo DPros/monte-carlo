@@ -1,10 +1,11 @@
 <form [formGroup]="form">
+  <div>ln(x)</div>
   <div>FROM<input type="number" formControlName="from"></div>
   <div>TO<input type="number" formControlName="to"></div>
-  <div><input type="radio" value="above" formControlName="where">ABOVE</div>
-  <div><input type="radio" value="below" formControlName="where">BELOW</div>
+  <div>LIMIT<input type="number" formControlName="limit"></div>
+  <div><input type="radio" value="top" formControlName="where">TOP</div>
+  <div><input type="radio" value="bottom" formControlName="where">BOTTOM</div>
+
 </form>
 
-{{form.value | json}}
-
-{{res}}
+AREA: {{res}}
